@@ -241,7 +241,7 @@ def from_file(filename: str) -> List[Board]:
     return boards
 
 def main():
-    from_file("jam_posted.txt")
+    from_file("jams_posted.txt")
 
 if __name__ == "__main__":
     main()
