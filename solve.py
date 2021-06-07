@@ -95,7 +95,7 @@ def get_successors(state):
     for index,car in enumerate(state.board.cars):
         if car.orientation == 'h':
             i = car.var_coord
-            while i >= 0 and state.board.gird[i][car.fix_coord] == '.':
+            while i >= 0 and state.board.grid[i][car.fix_coord] == '.':
                 new_state = copy_state(state, index, i)
                 successor.append()
                 i -=1
