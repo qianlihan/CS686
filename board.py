@@ -245,3 +245,10 @@ def from_file(filename: str) -> List[Board]:
     puzzle_file.close()
     return boards
 
+def main():
+    board = from_file("jams_posted.txt")
+    for b in board:
+       b.display()
+
+if __name__ == "__main__":
+    main()

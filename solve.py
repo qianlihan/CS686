@@ -183,8 +183,8 @@ def advanced_heuristic(board):
     goal = [board.cars[0].var_coord + board.cars[0].length, board.cars[0].fix_coord]
     block =1
     for i in range(goal[0], board.size):
-        if board.grid[goal[i][1]] != '.':
-            #check the car length
+        if board.grid[i][goal[1]] != '.':
+            #check the block length
             length=0
             m= goal[1]
             while m > 0 and board.grid[i][m] != '^':
