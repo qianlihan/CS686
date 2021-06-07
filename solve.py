@@ -42,7 +42,7 @@ def a_star(init_board, hfn):
     :return: (the path to goal state, solution cost)
     :rtype: List[State], int
     """
-    state = State(init_board, hfn, 0, None)
+    state = State(init_board, hfn, hfn(init_board), 0, None)
     frontier, explored = [state], set()
     while True:
         frontier.sort()
