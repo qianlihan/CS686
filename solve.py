@@ -62,9 +62,9 @@ def a_star(init_board, hfn):
                         check[item.board.__hash__] = item
                 else:
                     check[item.board.__hash__] = 0
-            explored.add(temp.board.__hash__)
-            frontier.pop(0)
-            print(len(frontier))
+        explored.add(temp.board.__hash__)
+        frontier.pop(0)
+        print(len(frontier))
 
 def dfs(init_board):
     """
