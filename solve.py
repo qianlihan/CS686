@@ -87,10 +87,10 @@ def dfs(init_board):
         if is_goal(temp):
             sol = get_path(temp)
             return sol, len(sol)
-        if not temp.board.__hash__ in explored:
+        if hash(temp.board) not in explored:
             new = get_successors(temp)
             new.sort(key= lambda a: a.id, reverse = True)
-            explored.add(temp.board.__hash__)
+            explored.add(hash(temp.board))
         frontier.pop(-1)
 
 
