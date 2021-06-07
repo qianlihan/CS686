@@ -8,13 +8,14 @@ def func(self, other):
 
 State.__lt__ = func
 
-def copy_state(state):
+def copy_state(state, index, i):
     car=[]
     for c in state.board.cars:
         if c.orientation == 'h':
             car.append(Car(c.var_coord, c.fix_coord, 'h', c.length, c.is_goal))
         else:
             car.append(Car(c.fix_coord, c.var_coord, 'v', c.length, c.is_goal))
+    car[index].set_coord(i)
     board = Board(state.board.name, state.board.size, car)
     return State(board, state.hfn, state.f + 1 -state.hfn, state.depth + 1, state)
 
@@ -94,26 +95,26 @@ def get_successors(state):
     for index,car in enumerate(state.board.cars):
         if car.orientation == 'h':
             i = car.var_coord
-            while i >= 0 and state.board[i][car.fix_coord] == '.':
-                new_state = copy_state(state)
-                new_state.board.cars[index].set_coord[i]
+            while i >= 0 and state.board.gird[i][car.fix_coord] == '.':
+                new_state = copy_state(state, index, i)
                 successor.append()
+                i -=1
             i = car.var_coord + car.length
-            while i <state.board.size and state.board[i][car.fix_coord] == '.':
-                new_state = copy_state(state)
-                new_state.board.cars[index].set_coord[i]
+            while i <state.board.size and state.board.grid[i][car.fix_coord] == '.':
+                new_state = copy_state(state, index, i)
                 successor.append()
+                i +=1
         else:
             i = car.var_coord
-            while i >= 0 and state.board[car.fix_coord][i] == '.':
-                new_state = copy_state(state)
-                new_state.board.cars[index].set_coord[i]
+            while i >= 0 and state.board.grid[car.fix_coord][i] == '.':
+                new_state = copy_state(state, index, i)
                 successor.append()
+                i -=1
             i = car.var_coord + car.length
-            while i <state.board.size and state.board[car.fix_coord][i] == '.':
-                new_state = copy_state(state)
-                new_state.board.cars[index].set_coord[i]
+            while i <state.board.size and state.board.grid[car.fix_coord][i] == '.':
+                new_state = copy_state(state, index, i)
                 successor.append()
+                i +=1
     return successor
 
 
@@ -210,6 +211,7 @@ def advanced_heuristic(board):
                 block +=1
             else:
                 block +=2
+    return block
 
 def main():
     board = from_file("jams_posted.txt")
