@@ -128,7 +128,8 @@ def get_successors(state):
                 new_state = copy_state(state, index, i - car.length)
                 successor.append(new_state)
                 i +=1
-    return successor.sort()
+    temp = successor.sort()
+    return temp
 
 
 def is_goal(state):
