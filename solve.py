@@ -87,7 +87,8 @@ def dfs(init_board):
             return sol, len(sol)
         if hash(temp.board) not in explored:
             new = get_successors(temp)
-            new.sort()
+            if new:
+                new.sort()
             explored.add(hash(temp.board))
         frontier.pop(-1)
     return [], -1
