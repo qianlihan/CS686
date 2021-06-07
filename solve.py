@@ -6,7 +6,7 @@ def func(self, other):
             if self.parent and other.parent:
                 return self.parent.id < other.parent.id
             else:
-                return not self.parent is None
+                return self.parent is not None
         else:
             return self.id < other.id
     else:
@@ -46,25 +46,23 @@ def a_star(init_board, hfn):
     frontier, explored = [state], set()
     check = dict()
     m=0
-    while m<2:
+    while frontier:
         frontier.sort()
         temp = frontier[0]
         if is_goal(temp):
             sol = get_path(temp)
             return sol, len(sol)
-        if not temp.board.__hash__ in explored:
+        if hash(temp.board) not in explored:
             new = get_successors(temp)
             for item in new:
-                if item.board.__hash__ not in explored:
-                    if item.board.__hash__ not in check or item < check[item.board.__hash__]:
+                if hash(item.board) not in explored:
+                    if hash(item.board) not in check or item < check[hash(item.board)]:
                         frontier.append(item)
-                        check[item.board.__hash__] = item
-            explored.add(temp.board.__hash__)
+                        check[hash(item.board)] = item
+            explored.add(hash(item.board))
         frontier.pop(0)
-        print(len(check))
-        print(len(explored))
         m+=1
-    #return [], -1
+    return [], -1
 
 def dfs(init_board):
     """
