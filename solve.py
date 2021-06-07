@@ -57,7 +57,7 @@ def a_star(init_board, hfn):
             new = get_successors(temp)
             for item in new:
                 if item.board.__hash__ not in explored:
-                    if item.board.__hash__ in check and item.f <= check[item.board.__hash__]:
+                    if item.board.__hash__ not in check or item.f <= check[item.board.__hash__]:
                         frontier.append(item)
                         check[item.board.__hash__] = item.f
                 
