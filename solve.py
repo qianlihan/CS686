@@ -42,7 +42,8 @@ def a_star(init_board, hfn):
             return [], -1
         temp = frontier[0]
         if is_goal(temp):
-            return get_path(temp)
+            sol = get_path(temp)
+            return sol, len(sol)
         if not temp.board.__hash__ in explored:
             frontier.extend(get_successors(temp))
             explored.add(temp.board.__hash__)
@@ -70,7 +71,8 @@ def dfs(init_board):
             return [], -1
         temp = frontier[-1]
         if is_goal(temp):
-            return get_path(temp)
+            sol = get_path(temp)
+            return sol, len(sol)
         if not temp.board.__hash__ in explored:
             new = get_successors(temp)
             new.sort(key= lambda a: a.id, reverse = True)
@@ -193,7 +195,7 @@ def advanced_heuristic(board):
             n= goal[1]
             while n< board.size and board.grid[i][n] != 'v':
                 length +=1
-                m+=1
+                n+=1
         
 
             slot, current = 0, 0
