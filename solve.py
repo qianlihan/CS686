@@ -1,5 +1,23 @@
 from board import *
 
+def func(self, other):
+    if self.f == other.f:
+        return self.id < other.id
+    else:
+         self.f < other.f
+
+State.__lt__ = func
+
+def copy_state(state):
+    car=[]
+    for c in state.board.cars:
+        if c.orientation == 'h':
+            car.append(Car(c.var_coord, c.fix_coord, 'h', c.length, c.is_goal))
+        else:
+            car.append(Car(c.fix_coord, c.var_coord, 'v', c.length, c.is_goal))
+    board = Board(state.board.name, state.board.size, car)
+    return State(board, state.hfn, state.f + 1 -state.hfn, state.depth + 1, state)
+
 def a_star(init_board, hfn):
     """
     Run the A_star search algorithm given an initial board and a heuristic function.
@@ -16,8 +34,19 @@ def a_star(init_board, hfn):
     :return: (the path to goal state, solution cost)
     :rtype: List[State], int
     """
-
-    raise NotImplementedError
+    state = State(init_board, hfn, 0, None)
+    frontier, explored = [state], ()
+    while True:
+        frontier.sort()
+        if not frontier:
+            return [], -1
+        temp = frontier[0]
+        if is_goal(temp):
+            return get_path(temp)
+        if not temp.board.__hash__ in explored:
+            frontier.extend(get_successors(temp))
+            explored.add(temp.board.__hash__)
+        frontier.pop(0)
 
 
 def dfs(init_board):
@@ -34,8 +63,19 @@ def dfs(init_board):
     :return: (the path to goal state, solution cost)
     :rtype: List[State], int
     """
-
-    raise NotImplementedError
+    state = State(init_board, 0, 0, None)
+    frontier, explored = [state], ()
+    while True:
+        if not frontier:
+            return [], -1
+        temp = frontier[-1]
+        if is_goal(temp):
+            return get_path(temp)
+        if not temp.board.__hash__ in explored:
+            new = get_successors(temp)
+            new.sort(key= lambda a: a.id, reverse = True)
+            explored.add(temp.board.__hash__)
+        frontier.pop(-1)
 
 
 def get_successors(state):
@@ -48,8 +88,31 @@ def get_successors(state):
     :return: The list of successor states.
     :rtype: List[State]
     """
-
-    raise NotImplementedError
+    successor = []
+    for index,car in enumerate(state.board.cars):
+        if car.orientation == 'h':
+            i = car.var_coord
+            while i >= 0 and state.board[i][car.fix_coord] == '.':
+                new_state = copy_state(state)
+                new_state.board.cars[index].set_coord[i]
+                successor.append()
+            i = car.var_coord + car.length
+            while i <state.board.size and state.board[i][car.fix_coord] == '.':
+                new_state = copy_state(state)
+                new_state.board.cars[index].set_coord[i]
+                successor.append()
+        else:
+            i = car.var_coord
+            while i >= 0 and state.board[car.fix_coord][i] == '.':
+                new_state = copy_state(state)
+                new_state.board.cars[index].set_coord[i]
+                successor.append()
+            i = car.var_coord + car.length
+            while i <state.board.size and state.board[car.fix_coord][i] == '.':
+                new_state = copy_state(state)
+                new_state.board.cars[index].set_coord[i]
+                successor.append()
+    return successor
 
 
 def is_goal(state):
@@ -61,8 +124,8 @@ def is_goal(state):
     :return: True or False
     :rtype: bool
     """
-
-    raise NotImplementedError
+    goal = state.board.cars[0]
+    return goal.var_coord + goal.length == state.board.size -1
 
 
 def get_path(state):
@@ -75,8 +138,12 @@ def get_path(state):
     :return: The path.
     :rtype: List[State]
     """
-
-    raise NotImplementedError
+    result =[]
+    temp = state
+    while temp:
+        result.append(temp)
+        temp = temp.parent
+    raise result.reverse()
 
 
 def blocking_heuristic(board):
@@ -93,9 +160,16 @@ def blocking_heuristic(board):
     :return: The heuristic value.
     :rtype: int
     """
+    start = board.cars[0].fix_coord + board.cars[0].var_coord +1
+    if start == board.size - 1:
+        return 0
 
-    raise NotImplementedError
-
+    block = 1
+    while start < board.size:
+        if board.grid[start][board.cars[0].fix_coord] != '.':
+            block += 1
+        start+=1
+    return block
 
 def advanced_heuristic(board):
     """
@@ -106,5 +180,43 @@ def advanced_heuristic(board):
     :return: The heuristic value.
     :rtype: int
     """
+    goal = [board.cars[0].var_coord + board.cars[0].length, board.cars[0].fix_coord]
+    block =1
+    for i in range(goal[0], board.size):
+        if board.grid[goal[i][1]] != '.':
+            #check the car length
+            length=0
+            m= goal[1]
+            while m > 0 and board.grid[i][m] != '^':
+                length +=1
+                m-=1
+            n= goal[1]
+            while n< board.size and board.grid[i][n] != 'v':
+                length +=1
+                m+=1
+        
 
-    raise NotImplementedError
+            slot, current = 0, 0
+            for j in range(board.size):
+                if board.grid[i][j] == '.' or (j >=m and j<= n and j!=goal[1]):
+                    current +=1
+                else:
+                    if current > slot:
+                        slot = current
+                    current =0
+            if slot >= length:
+                block +=1
+            else:
+                block +=2
+
+def main():
+    board = from_file("jams_posted.txt")
+    for b in board:
+        print(blocking_heuristic(b))
+        print(advanced_heuristic(b))
+        temp = dfs(b)
+        for i in temp:
+            print(i)
+
+if __name__ == "__main__":
+    main()

@@ -101,11 +101,13 @@ class Board:
 
         """
 
-        for i in range(self.size):
+        #create a n*n . first
+        for i in range(self.size): 
             line = []
             for j in range(self.size):
                 line.append('.')
             self.grid.append(line)
+            
         for car in self.cars:
             if car.orientation == 'h':
                 self.grid[car.fix_coord][car.var_coord] = '<'
@@ -184,6 +186,9 @@ class State:
         self.parent = parent
         self.id = hash(board)  # The id for breaking ties.
 
+    def __str__(self):
+        return self.board.display()
+
     # customized eq for object comparison.
     def __eq__(self, other):
         if isinstance(other, State):
@@ -240,10 +245,3 @@ def from_file(filename: str) -> List[Board]:
     puzzle_file.close()
     return boards
 
-def main():
-    board = from_file("jams_posted.txt")
-    for b in board:
-        b.display()
-
-if __name__ == "__main__":
-    main()
