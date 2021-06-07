@@ -62,6 +62,7 @@ def a_star(init_board, hfn):
                         check[item.board.__hash__] = item
                 
             explored.add(temp.board.__hash__)
+            frontier.pop(0)
 
 def dfs(init_board):
     """
