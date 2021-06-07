@@ -24,7 +24,7 @@ def copy_state(state, index, i):
     car[index].set_coord(i)
     board = Board(state.board.name, state.board.size, car)
     temp = state.hfn(board) +1
-    return State(board, state.hfn, state.depth + temp, state.depth + 1, state)
+    return State(board, state.hfn, state.depth + temp, state.depth + 1, parent =state)
 
 def a_star(init_board, hfn):
     """
@@ -85,7 +85,6 @@ def dfs(init_board):
             return [], -1
         temp = frontier[-1]
         if is_goal(temp):
-            print(temp.parent)
             sol = get_path(temp)
             return sol, len(sol)
         if hash(temp.board) not in explored:
