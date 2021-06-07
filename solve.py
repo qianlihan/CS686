@@ -42,7 +42,7 @@ def a_star(init_board, hfn):
     :rtype: List[State], int
     """
     state = State(init_board, hfn, 0, None)
-    frontier, explored = [state], ()
+    frontier, explored = [state], set()
     while True:
         frontier.sort()
         if not frontier:
@@ -72,7 +72,7 @@ def dfs(init_board):
     :rtype: List[State], int
     """
     state = State(init_board, zero_heuristic, 0, 0, None)
-    frontier, explored = [state], ()
+    frontier, explored = [state], set()
     while True:
         if not frontier:
             return [], -1
