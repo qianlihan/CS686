@@ -2,7 +2,13 @@ from board import *
 
 def func(self, other):
     if self.f == other.f:
-        return self.id < other.id
+        if self.id == other.id:
+            if self.parent and other.parent:
+                return self.parent.id < other.parent.id
+            else:
+                return not self.parent is None
+        else:
+            return self.id < other.id
     else:
          self.f < other.f
 
@@ -17,7 +23,7 @@ def copy_state(state, index, i):
             car.append(Car(c.fix_coord, c.var_coord, 'v', c.length, c.is_goal))
     car[index].set_coord(i)
     board = Board(state.board.name, state.board.size, car)
-    return State(board, state.hfn, state.depth + state.hfn(state.board) +1, state.depth + 1, state)
+    return State(board, state.hfn, state.depth + state.hfn(board) +1, state.depth + 1, state)
 
 def a_star(init_board, hfn):
     """
@@ -219,6 +225,10 @@ def main():
         print(blocking_heuristic(b))
         print(advanced_heuristic(b))
         temp = dfs(b)
+        for i in temp:
+            print(i)
+
+        temp = a_star(b, blocking_heuristic)
         for i in temp:
             print(i)
 
