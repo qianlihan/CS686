@@ -63,6 +63,7 @@ def a_star(init_board, hfn):
                 
             explored.add(temp.board.__hash__)
             frontier.pop(0)
+            print(len(frontier))
 
 def dfs(init_board):
     """
