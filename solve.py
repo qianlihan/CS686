@@ -129,7 +129,6 @@ def get_successors(state):
                 new_state = copy_state(state, index, i - car.length)
                 successor.append(new_state)
                 i +=1
-    print(len(successor))
 
     return successor.sort()
 
