@@ -4,7 +4,7 @@ def func(self, other):
     if self.f == other.f:
         if self.id == other.id:
             if self.parent and other.parent:
-                return self.parent.id < other.parent.id
+                return self.parent.id > other.parent.id
             else:
                 return self.parent is not None
         else:
@@ -87,11 +87,9 @@ def dfs(init_board):
             return sol, len(sol)
         if hash(temp.board) not in explored:
             new = get_successors(temp)
-            new.sort(key= lambda a: a.id, reverse = True)
+            new.sort()
             explored.add(hash(temp.board))
         frontier.pop(-1)
-        for i in frontier:
-            print(i.parent)
     return [], -1
 
 def get_successors(state):
@@ -128,6 +126,7 @@ def get_successors(state):
                 new_state = copy_state(state, index, i - car.length)
                 successor.append(new_state)
                 i +=1
+    successor.sort()
     return successor
 
 
@@ -141,7 +140,7 @@ def is_goal(state):
     :rtype: bool
     """
     goal = state.board.cars[0]
-    return goal.var_coord + goal.length == state.board.size -1
+    return goal.var_coord + goal.length == state.board.size 
 
 
 def get_path(state):
@@ -176,7 +175,7 @@ def blocking_heuristic(board):
     :return: The heuristic value.
     :rtype: int
     """
-    start = board.cars[0].fix_coord + board.cars[0].var_coord +1
+    start = board.cars[0].length + board.cars[0].var_coord
     if start == board.size - 1:
         return 0
 
