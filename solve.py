@@ -80,9 +80,7 @@ def dfs(init_board):
     """
     state = State(init_board, zero_heuristic, 0, 0, None)
     frontier, explored = [state], set()
-    while True:
-        if not frontier:
-            return [], -1
+    while frontier:
         temp = frontier[-1]
         if is_goal(temp):
             for i in frontier:
@@ -94,7 +92,7 @@ def dfs(init_board):
             new.sort(key= lambda a: a.id, reverse = True)
             explored.add(hash(temp.board))
         frontier.pop(-1)
-
+    return [], -1
 
 def get_successors(state):
     """
