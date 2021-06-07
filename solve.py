@@ -85,6 +85,8 @@ def dfs(init_board):
             return [], -1
         temp = frontier[-1]
         if is_goal(temp):
+            for i in frontier:
+                print(i.parent)
             sol = get_path(temp)
             return sol, len(sol)
         if hash(temp.board) not in explored:
