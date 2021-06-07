@@ -159,7 +159,7 @@ def get_path(state):
     while temp:
         result.append(temp)
         temp = temp.parent
-    raise result.reverse()
+    return result.reverse()
 
 
 def blocking_heuristic(board):
@@ -232,12 +232,10 @@ def main():
         print(blocking_heuristic(b))
         print(advanced_heuristic(b))
         temp = dfs(b)
-        for i in temp:
-            print(i)
+        print(temp[0], temp[1])
 
         temp = a_star(b, blocking_heuristic)
-        for i in temp:
-            print(i)
+        print(temp[0], temp[1])
 
 if __name__ == "__main__":
     main()
