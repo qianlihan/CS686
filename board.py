@@ -43,6 +43,13 @@ class Car:
         self.is_goal = is_goal
 
     def set_coord(self, coord):
+        """
+        Update the var_coord of the car after moving.
+
+        :param coord: The new coordination after moving.
+        :type coord: int
+        """
+
         self.var_coord = coord
 
 
