@@ -116,7 +116,7 @@ def get_successors(state):
                 new_state = copy_state(state, index, i)
                 successor.append(new_state)
                 i -=1
-            i = car.var_coord + car.length
+            i = car.var_coord + car.length -1
             while i <state.board.size and state.board.grid[car.fix_coord][i] == '.':
                 new_state = copy_state(state, index, i)
                 successor.append(new_state)
