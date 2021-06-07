@@ -90,6 +90,7 @@ def dfs(init_board):
             new = get_successors(temp)
             if new:
                 new.sort()
+            frontier.extend(new)
             explored.add(hash(temp.board))
         frontier.pop(-1)
     return [], -1
