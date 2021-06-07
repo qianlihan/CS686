@@ -61,8 +61,8 @@ def a_star(init_board, hfn):
                         check[item.board.__hash__] = item
             explored.add(temp.board.__hash__)
         frontier.pop(0)
-        print(check.values())
-        print(explored)
+        print(len(check))
+        print(len(explored))
         m+=1
     #return [], -1
 
