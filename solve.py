@@ -107,26 +107,25 @@ def get_successors(state):
     """
     successor = []
     for index,car in enumerate(state.board.cars):
+        i = car.var_coord -1
         if car.orientation == 'h':
-            i = car.var_coord
             while i >= 0 and state.board.grid[i][car.fix_coord] == '.':
                 new_state = copy_state(state, index, i)
                 successor.append(new_state)
                 i -=1
             i = car.var_coord + car.length
             while i <state.board.size and state.board.grid[i][car.fix_coord] == '.':
-                new_state = copy_state(state, index, i - car.length)
+                new_state = copy_state(state, index, i - car.length + 1)
                 successor.append(new_state)
                 i +=1
         else:
-            i = car.var_coord
             while i >= 0 and state.board.grid[car.fix_coord][i] == '.':
                 new_state = copy_state(state, index, i)
                 successor.append(new_state)
                 i -=1
-            i = car.var_coord + car.length -1
+            i = car.var_coord + car.length 
             while i <state.board.size and state.board.grid[car.fix_coord][i] == '.':
-                new_state = copy_state(state, index, i - car.length)
+                new_state = copy_state(state, index, i - car.length + 1)
                 successor.append(new_state)
                 i +=1
     return successor
