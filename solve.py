@@ -176,8 +176,8 @@ def blocking_heuristic(board):
     :return: The heuristic value.
     :rtype: int
     """
-    start = board.cars[0].length + board.cars[0].var_coord
-    if start == board.size - 1:
+    start = board.cars[0].length + board.cars[0].var_coord 
+    if start == board.size:
         return 0
 
     block = 1
