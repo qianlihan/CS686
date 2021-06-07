@@ -60,7 +60,8 @@ def a_star(init_board, hfn):
                     if item.board.__hash__ not in check or item < check[item.board.__hash__]:
                         frontier.append(item)
                         check[item.board.__hash__] = item
-                
+                else:
+                    check[item.board.__hash__] = 0
             explored.add(temp.board.__hash__)
             frontier.pop(0)
             print(len(frontier))
