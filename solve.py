@@ -14,7 +14,7 @@ def func(self, other):
 
 State.__lt__ = func
 
-def copy_state(state, index, i):
+def copy_state(state, index, i, ):
     car=[]
     for c in state.board.cars:
         if c.orientation == 'h':
@@ -107,7 +107,7 @@ def get_successors(state):
                 i -=1
             i = car.var_coord + car.length
             while i <state.board.size and state.board.grid[i][car.fix_coord] == '.':
-                new_state = copy_state(state, index, i)
+                new_state = copy_state(state, index, i - car.length)
                 successor.append(new_state)
                 i +=1
         else:
@@ -118,7 +118,7 @@ def get_successors(state):
                 i -=1
             i = car.var_coord + car.length -1
             while i <state.board.size and state.board.grid[car.fix_coord][i] == '.':
-                new_state = copy_state(state, index, i)
+                new_state = copy_state(state, index, i - car.length)
                 successor.append(new_state)
                 i +=1
     return successor
