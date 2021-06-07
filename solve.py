@@ -8,7 +8,7 @@ def func(self, other):
             else:
                 return self.parent is not None
         else:
-            return self.id < other.id
+            return self.id > other.id
     else:
         return self.f < other.f
 
@@ -126,8 +126,7 @@ def get_successors(state):
                 new_state = copy_state(state, index, i - car.length)
                 successor.append(new_state)
                 i +=1
-    successor.sort()
-    return successor
+    return successor.sort()
 
 
 def is_goal(state):
