@@ -10,7 +10,7 @@ def func(self, other):
         else:
             return self.id < other.id
     else:
-         self.f < other.f
+        return self.f < other.f
 
 State.__lt__ = func
 
