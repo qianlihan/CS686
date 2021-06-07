@@ -54,9 +54,11 @@ def a_star(init_board, hfn):
             return sol, len(sol)
         if not temp.board.__hash__ in explored:
             new = get_successors(temp)
+            print(len(new))
             for item in new:
                 if item.board.__hash__ not in explored:
                     frontier.append(item)
+                
             explored.add(temp.board.__hash__)
         frontier.pop(0)
 
