@@ -83,8 +83,6 @@ def dfs(init_board):
     while frontier:
         temp = frontier[-1]
         if is_goal(temp):
-            for i in frontier:
-                print(i.parent)
             sol = get_path(temp)
             return sol, len(sol)
         if hash(temp.board) not in explored:
@@ -92,6 +90,8 @@ def dfs(init_board):
             new.sort(key= lambda a: a.id, reverse = True)
             explored.add(hash(temp.board))
         frontier.pop(-1)
+        for i in frontier:
+            print(i.parent)
     return [], -1
 
 def get_successors(state):
