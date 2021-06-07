@@ -89,7 +89,7 @@ def dfs(init_board):
         if hash(temp.board) not in explored:
             new = get_successors(temp)
             if new:
-                new.sort()
+                new.sort(key= lambda a: a.id, reverse = True)
             frontier.extend(new)
             explored.add(hash(temp.board))
         frontier.pop(-1)
@@ -129,10 +129,7 @@ def get_successors(state):
                 new_state = copy_state(state, index, i - car.length)
                 successor.append(new_state)
                 i +=1
-    print(len(successor))
-    temp =successor.sort()
-    print(len(temp))
-    return temp
+    return successor
 
 
 def is_goal(state):
