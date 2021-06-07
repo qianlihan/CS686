@@ -17,7 +17,9 @@ def copy_state(state, index, i):
             car.append(Car(c.fix_coord, c.var_coord, 'v', c.length, c.is_goal))
     car[index].set_coord(i)
     board = Board(state.board.name, state.board.size, car)
-    return State(board, state.hfn, state.f + 1 -state.hfn, state.depth + 1, state)
+    temp = State(board, state.hfn, state.f + 1 - state.hfn(state.board), state.depth + 1, state)
+    temp.f += temp.hfn(temp)
+    return temp
 
 def a_star(init_board, hfn):
     """
