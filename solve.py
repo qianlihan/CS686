@@ -45,7 +45,8 @@ def a_star(init_board, hfn):
     state = State(init_board, hfn, hfn(init_board), 0, None)
     frontier, explored = [state], set()
     check = dict()
-    while frontier:
+    m=0
+    while m<2:
         frontier.sort()
         temp = frontier[0]
         if is_goal(temp):
@@ -60,7 +61,10 @@ def a_star(init_board, hfn):
                         check[item.board.__hash__] = item
             explored.add(temp.board.__hash__)
         frontier.pop(0)
-    return [], -1
+        print(check)
+        print(explored)
+        m+=1
+    #return [], -1
 
 def dfs(init_board):
     """
