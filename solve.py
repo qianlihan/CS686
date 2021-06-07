@@ -44,6 +44,7 @@ def a_star(init_board, hfn):
     """
     state = State(init_board, hfn, hfn(init_board), 0, None)
     frontier, explored = [state], set()
+    check = dict()
     while True:
         frontier.sort()
         if not frontier:
@@ -56,10 +57,11 @@ def a_star(init_board, hfn):
             new = get_successors(temp)
             for item in new:
                 if item.board.__hash__ not in explored:
-                    frontier.append(item)
+                    if item.board.__hash__ in check and item.f <= check[item.board.__hash__]:
+                        frontier.append(item)
+                        check[item.board.__hash__] = item.f
                 
             explored.add(temp.board.__hash__)
-        frontier.pop(0)
         print(len(frontier))
 
 
