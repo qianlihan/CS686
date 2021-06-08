@@ -105,7 +105,7 @@ def dfs(init_board):
         if hash(temp.board) not in explored:
             new = get_successors(temp)
             if new:
-                new.sort(key= lambda a: a.id, reverse = True)
+                new.sort(reverse = True)
             frontier.extend(new)
             explored.add(hash(temp.board))
         frontier.pop(-1)
