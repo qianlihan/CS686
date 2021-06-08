@@ -245,7 +245,7 @@ def advanced_heuristic(board):
     return block
 
 def main():
-    board = from_file("temp.txt")
+    board = from_file("jams_posted.txt")
     for b in board:
         b.display()
         temp = dfs(b)
