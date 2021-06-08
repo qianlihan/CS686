@@ -26,6 +26,15 @@ def copy_state(state, index, i):
     temp = state.hfn(board) +1
     return State(board, state.hfn, state.depth + temp, state.depth + 1, parent =state)
 
+def check_h(board):
+    start = board.cars[0].length + board.cars[0].var_coord 
+    while start < board.size:
+        target = board.grid[board.cars[0].fix_coord][start]
+        if target == '<' or target == '>':
+           return False
+        start +=1
+    return True
+
 def a_star(init_board, hfn):
     """
     Run the A_star search algorithm given an initial board and a heuristic function.
@@ -42,18 +51,24 @@ def a_star(init_board, hfn):
     :return: (the path to goal state, solution cost)
     :rtype: List[State], int
     """
+    if not check_h(init_board):
+        return [], -1
+
     state = State(init_board, hfn, hfn(init_board), 0, None)
     frontier, explored = [state], set()
     check = dict()
+    
+    expand = 0
     m=0
     while frontier:
         frontier.sort()
         temp = frontier[0]
         if is_goal(temp):
             sol = get_path(temp)
-            return sol, len(sol)
+            return sol, len(sol), expand
         if hash(temp.board) not in explored:
             new = get_successors(temp)
+            expand +=1
             if new:
                 for item in new:
                     if hash(item.board) not in explored:
@@ -79,6 +94,9 @@ def dfs(init_board):
     :return: (the path to goal state, solution cost)
     :rtype: List[State], int
     """
+    if not check_h(init_board):
+        return [], -1
+
     state = State(init_board, zero_heuristic, 0, 0, None)
     frontier, explored = [state], set()
     while frontier:
@@ -109,22 +127,22 @@ def get_successors(state):
     for index,car in enumerate(state.board.cars):
         i = car.var_coord -1
         if car.orientation == 'h':
-            while i >= 0 and state.board.grid[i][car.fix_coord] == '.':
-                new_state = copy_state(state, index, i)
-                successor.append(new_state)
-                i -=1
-            i = car.var_coord + car.length
-            while i <state.board.size and state.board.grid[i][car.fix_coord] == '.':
-                new_state = copy_state(state, index, i - car.length + 1)
-                successor.append(new_state)
-                i +=1
-        else:
             while i >= 0 and state.board.grid[car.fix_coord][i] == '.':
                 new_state = copy_state(state, index, i)
                 successor.append(new_state)
                 i -=1
-            i = car.var_coord + car.length 
+            i = car.var_coord + car.length
             while i <state.board.size and state.board.grid[car.fix_coord][i] == '.':
+                new_state = copy_state(state, index, i - car.length + 1)
+                successor.append(new_state)
+                i +=1
+        else:
+            while i >= 0 and state.board.grid[i][car.fix_coord] == '.':
+                new_state = copy_state(state, index, i)
+                successor.append(new_state)
+                i -=1
+            i = car.var_coord + car.length 
+            while i <state.board.size and state.board.grid[i][car.fix_coord] == '.':
                 new_state = copy_state(state, index, i - car.length + 1)
                 successor.append(new_state)
                 i +=1
@@ -159,7 +177,8 @@ def get_path(state):
     while temp:
         result.append(temp)
         temp = temp.parent
-    return result.reverse()
+    result.reverse()
+    return result
 
 
 def blocking_heuristic(board):
@@ -182,7 +201,7 @@ def blocking_heuristic(board):
 
     block = 1
     while start < board.size:
-        if board.grid[start][board.cars[0].fix_coord] != '.':
+        if board.grid[board.cars[0].fix_coord][start] != '.':
             block += 1
         start+=1
     return block
@@ -196,31 +215,32 @@ def advanced_heuristic(board):
     :return: The heuristic value.
     :rtype: int
     """
+    if board.cars[0].var_coord + board.cars[0].length == board.size:
+        return 0
     goal = [board.cars[0].var_coord + board.cars[0].length, board.cars[0].fix_coord]
     block =1
     for i in range(goal[0], board.size):
-        if board.grid[i][goal[1]] != '.':
+        if board.grid[goal[1]][i] != '.':
             #check the block length
             length=0
             m= goal[1]
-            while m > 0 and board.grid[i][m] != '^':
+            while m >= 0 and board.grid[m][i] != '^':
                 length +=1
                 m-=1
             n= goal[1]
-            while n< board.size and board.grid[i][n] != 'v':
+            while n< board.size and board.grid[n][i] != 'v':
                 length +=1
                 n+=1
-        
+            length += 1
 
-            slot, current = 0, 0
-            for j in range(board.size):
-                if board.grid[i][j] == '.' or (j >=m and j<= n and j!=goal[1]):
-                    current +=1
-                else:
-                    if current > slot:
-                        slot = current
-                    current =0
-            if slot >= length:
+            m-=1
+            n+=1
+            while m >= 0 and board.grid[m][i] == '.':
+                m-=1
+            while n< board.size and board.grid[n][i] == '.':
+                n+=1
+            slot = [goal[1] - m - 1, n - goal[1] -1]
+            if max(slot) >= length:
                 block +=1
             else:
                 block +=2
@@ -228,14 +248,15 @@ def advanced_heuristic(board):
 
 def main():
     board = from_file("jams_posted.txt")
+    i=1
     for b in board:
-        print(blocking_heuristic(b))
-        print(advanced_heuristic(b))
+        #b.display()
         temp = dfs(b)
-        print(temp[0], temp[1])
-
+        #print("dfs: ", temp[1])
         temp = a_star(b, blocking_heuristic)
-        print(temp[0], temp[1])
+        print("blocking:", temp[2], end=" ")
+        temp = a_star(b, advanced_heuristic)
+        print("advanced:",  temp[2])
 
 if __name__ == "__main__":
     main()

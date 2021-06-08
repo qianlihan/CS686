@@ -186,9 +186,6 @@ class State:
         self.parent = parent
         self.id = hash(board)  # The id for breaking ties.
 
-    def __str__(self):
-        return self.board.display()
-
     # customized eq for object comparison.
     def __eq__(self, other):
         if isinstance(other, State):
