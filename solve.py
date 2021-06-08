@@ -4,11 +4,11 @@ def func(self, other):
     if self.f == other.f:
         if self.id == other.id:
             if self.parent and other.parent:
-                return self.parent.id > other.parent.id
+                return self.parent.id < other.parent.id
             else:
                 return self.parent is not None
         else:
-            return self.id > other.id
+            return self.id < other.id
     else:
         return self.f < other.f
 
@@ -58,17 +58,15 @@ def a_star(init_board, hfn):
     frontier, explored = [state], set()
     check = dict()
     
-    expand = 0
     m=0
     while frontier:
         frontier.sort()
         temp = frontier[0]
         if is_goal(temp):
             sol = get_path(temp)
-            return sol, len(sol), expand
+            return sol, len(sol)
         if hash(temp.board) not in explored:
             new = get_successors(temp)
-            expand +=1
             if new:
                 for item in new:
                     if hash(item.board) not in explored:
@@ -247,16 +245,16 @@ def advanced_heuristic(board):
     return block
 
 def main():
-    board = from_file("jams_posted.txt")
-    i=1
+    board = from_file("temp.txt")
     for b in board:
-        #b.display()
+        b.display()
         temp = dfs(b)
-        #print("dfs: ", temp[1])
+        print("dfs: ", temp[1])
+        
         temp = a_star(b, blocking_heuristic)
-        print("blocking:", temp[2], end=" ")
+        print("blocking:", temp[1])
         temp = a_star(b, advanced_heuristic)
-        print("advanced:",  temp[2])
+        print("advanced:",  temp[1])
 
 if __name__ == "__main__":
     main()
