@@ -67,11 +67,11 @@ def a_star(init_board, hfn):
             return (sol, len(sol) -  1, expand)
         if hash(temp.board) not in explored:
             new = get_successors(temp)
+            expand +=1
             if new:
                 for item in new:
                     if hash(item.board) not in explored:
                         if hash(item.board) not in check or item < check[hash(item.board)]:
-                            expand +=1
                             frontier.append(item)
                             check[hash(item.board)] = item
         explored.add(hash(temp.board))
@@ -250,6 +250,7 @@ def main():
     for b in board:
         temp = a_star(b, blocking_heuristic)
         print("blocking:", temp[2], end= " ")
+    
         temp = a_star(b, advanced_heuristic)
         print("advanced:", temp[2])
 
