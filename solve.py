@@ -52,31 +52,31 @@ def a_star(init_board, hfn):
     :rtype: List[State], int
     """
     if not check_h(init_board):
-        return [], -1
+        return ([], -1)
 
     state = State(init_board, hfn, hfn(init_board), 0, None)
     frontier, explored = [state], set()
     check = dict()
-    
-    m=0
+    expand = 0
+
     while frontier:
         frontier.sort()
         temp = frontier[0]
         if is_goal(temp):
             sol = get_path(temp)
-            return sol, len(sol)
+            return (sol, len(sol) -  1, expand)
         if hash(temp.board) not in explored:
             new = get_successors(temp)
             if new:
                 for item in new:
                     if hash(item.board) not in explored:
                         if hash(item.board) not in check or item < check[hash(item.board)]:
+                            expand +=1
                             frontier.append(item)
                             check[hash(item.board)] = item
         explored.add(hash(temp.board))
         frontier.pop(0)
-        m+=1
-    return [], -1
+    return ([], -1)
 
 def dfs(init_board):
     """
@@ -93,7 +93,7 @@ def dfs(init_board):
     :rtype: List[State], int
     """
     if not check_h(init_board):
-        return [], -1
+        return ([], -1)
 
     state = State(init_board, zero_heuristic, 0, 0, None)
     frontier, explored = [state], set()
@@ -101,15 +101,16 @@ def dfs(init_board):
         temp = frontier[-1]
         if is_goal(temp):
             sol = get_path(temp)
-            return sol, len(sol)
+            return (sol, len(sol) -1)
+        frontier.pop(-1)
         if hash(temp.board) not in explored:
             new = get_successors(temp)
             if new:
-                new.sort(reverse = True)
+                new.sort(key = lambda a: a.id ,reverse= True)
             frontier.extend(new)
             explored.add(hash(temp.board))
-        frontier.pop(-1)
-    return [], -1
+        
+    return ([], -1)
 
 def get_successors(state):
     """
@@ -247,14 +248,11 @@ def advanced_heuristic(board):
 def main():
     board = from_file("jams_posted.txt")
     for b in board:
-        b.display()
-        temp = dfs(b)
-        print("dfs: ", temp[1])
-        
         temp = a_star(b, blocking_heuristic)
-        print("blocking:", temp[1])
-        temp = a_star(b, advanced_heuristic)
-        print("advanced:",  temp[1])
+        print("blocking:", temp[2], end= " ")
+        temp = a_star(b, blocking_heuristic)
+        print("advanced:", temp[2])
 
+    
 if __name__ == "__main__":
     main()
