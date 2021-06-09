@@ -250,7 +250,7 @@ def main():
     for b in board:
         temp = a_star(b, blocking_heuristic)
         print("blocking:", temp[2], end= " ")
-        temp = a_star(b, blocking_heuristic)
+        temp = a_star(b, advanced_heuristic)
         print("advanced:", temp[2])
 
     
